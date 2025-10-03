@@ -25,7 +25,7 @@ const apiRequest = async (url, options = {}) => {
     config.body = JSON.stringify(config.body);
   }
 
-  const response = await fetch(`http://localhost:5000${url}`, config);
+  const response = await fetch(`https://teamflow-1yai.onrender.com${url}`, config);
   const data = await response.json();
 
   if (!response.ok) {

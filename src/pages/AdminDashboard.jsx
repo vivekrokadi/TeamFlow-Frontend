@@ -35,7 +35,7 @@ const AdminDashboard = () => {
       const token = localStorage.getItem('token');
       
       // Fetch tasks
-      const tasksResponse = await fetch('http://localhost:5000/api/tasks', {
+      const tasksResponse = await fetch('https://teamflow-1yai.onrender.com/api/tasks', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -46,7 +46,7 @@ const AdminDashboard = () => {
       setTasks(tasksData.data);
 
       // Fetch employees
-      const usersResponse = await fetch('http://localhost:5000/api/users', {
+      const usersResponse = await fetch('https://teamflow-1yai.onrender.com/api/users', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -95,7 +95,7 @@ const AdminDashboard = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/tasks/${taskId}`, {
+      const response = await fetch(`https://teamflow-1yai.onrender.com/api/tasks/${taskId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

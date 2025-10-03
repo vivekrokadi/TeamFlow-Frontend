@@ -22,7 +22,7 @@ const EmployeeDashboard = () => {
   const fetchTasks = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/tasks', {
+      const response = await fetch('https://teamflow-1yai.onrender.com/api/tasks', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -59,7 +59,7 @@ const EmployeeDashboard = () => {
   const handleStatusUpdate = async (taskId, newStatus) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/tasks/${taskId}`, {
+      const response = await fetch(`https://teamflow-1yai.onrender.com/api/tasks/${taskId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
