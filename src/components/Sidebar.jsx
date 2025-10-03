@@ -1,12 +1,7 @@
-import React from 'react';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  Users, 
-  LogOut,
-  User
-} from 'lucide-react';
+import React from "react";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate, useLocation } from "react-router-dom";
+import { LayoutDashboard, Users, LogOut, User } from "lucide-react";
 
 const Sidebar = ({ isOpen, onClose }) => {
   const { user, logout } = useAuth();
@@ -15,15 +10,14 @@ const Sidebar = ({ isOpen, onClose }) => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    // No need to navigate here - logout function in AuthContext will handle it
   };
 
   const navigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    ...(user?.role === 'admin' 
-      ? [{ name: 'Admin Panel', href: '/admin', icon: Users }]
-      : []
-    ),
+    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    ...(user?.role === "admin"
+      ? [{ name: "Admin Panel", href: "/admin", icon: Users }]
+      : []),
   ];
 
   const NavItem = ({ item, isActive, onClick }) => {
@@ -33,8 +27,8 @@ const Sidebar = ({ isOpen, onClose }) => {
         onClick={onClick}
         className={`w-full flex items-center space-x-3 px-3 py-3 rounded-lg transition-colors duration-200 ${
           isActive
-            ? 'bg-blue-600 text-white'
-            : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+            ? "bg-blue-600 text-white"
+            : "text-gray-300 hover:bg-gray-700 hover:text-white"
         }`}
       >
         <Icon size={20} />
@@ -47,24 +41,25 @@ const Sidebar = ({ isOpen, onClose }) => {
     <>
       {/* Overlay for mobile */}
       {isOpen && (
-        <div 
+        <div
           className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
           onClick={onClose}
         />
       )}
 
       {/* Sidebar */}
-      <div className={`
+      <div
+        className={`
         fixed inset-y-0 left-0 z-50 w-64 bg-gray-800 border-r border-gray-700 transform transition-transform duration-300 ease-in-out
-        ${isOpen ? 'translate-x-0' : '-translate-x-full'} 
+        ${isOpen ? "translate-x-0" : "-translate-x-full"} 
         lg:translate-x-0 lg:static lg:inset-0
-      `}>
+      `}
+      >
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="flex items-center justify-center h-16 border-b border-gray-700 px-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg"></div>
-              <span className="text-xl font-bold text-white">TeamFlow</span>
+            <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+              <Users className="text-white" size={24} />
             </div>
           </div>
 
@@ -96,12 +91,10 @@ const Sidebar = ({ isOpen, onClose }) => {
                 <p className="text-sm font-medium text-white truncate">
                   {user?.name}
                 </p>
-                <p className="text-xs text-gray-400 capitalize">
-                  {user?.role}
-                </p>
+                <p className="text-xs text-gray-400 capitalize">{user?.role}</p>
               </div>
             </div>
-            
+
             <button
               onClick={handleLogout}
               className="w-full flex items-center space-x-3 px-3 py-3 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-colors duration-200"

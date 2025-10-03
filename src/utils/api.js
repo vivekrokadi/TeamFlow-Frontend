@@ -1,4 +1,15 @@
+import { store } from '../store'; // We'll create a simple store for navigation
+
 const API_BASE_URL = 'https://teamflow-1yai.onrender.com';
+
+// Simple store to hold navigate function
+export const navigationStore = {
+  navigate: null
+};
+
+export const setNavigate = (navigate) => {
+  navigationStore.navigate = navigate;
+};
 
 export const apiRequest = async (endpoint, options = {}) => {
   const token = localStorage.getItem('token');
@@ -21,7 +32,16 @@ export const apiRequest = async (endpoint, options = {}) => {
   // Handle unauthorized responses
   if (response.status === 401) {
     localStorage.removeItem('token');
-    window.location.href = '/login';
+    localStorage.removeItem('user');
+    
+    // Use React Router navigation if available, otherwise fallback
+    if (navigationStore.navigate) {
+      navigationStore.navigate('/login', { replace: true });
+    } else {
+      // Fallback for components that don't have access to navigate
+      window.location.href = '/login';
+    }
+    
     throw new Error('Unauthorized');
   }
 

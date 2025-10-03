@@ -1,9 +1,25 @@
 import React, { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { 
+  LayoutDashboard, 
+  Users, 
+  LogOut,
+  User,
+  Menu,
+  X
+} from 'lucide-react';
 import Sidebar from './Sidebar';
 
 const Layout = ({ children }) => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    // No need to navigate here - logout function in AuthContext will handle it
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 flex">

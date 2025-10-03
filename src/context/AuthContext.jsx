@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
 
@@ -15,6 +16,7 @@ const API_BASE_URL = 'https://teamflow-1yai.onrender.com';
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   // Load user from localStorage on initial load
   useEffect(() => {
@@ -121,7 +123,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     clearAuthData();
-    window.location.href = '/login';
+    navigate('/login');
   };
 
   const value = {
