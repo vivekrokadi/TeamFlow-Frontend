@@ -47,14 +47,14 @@ const Register = () => {
       await register(registerData);
       navigate('/dashboard');
     } catch (error) {
-      setError(error.message || 'Registration failed');
+      setError(error.message || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-dark-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         {/* Header */}
         <div className="text-center mb-8">
@@ -68,10 +68,10 @@ const Register = () => {
         </div>
 
         {/* Register Form */}
-        <div className="card p-8">
+        <div className="bg-gray-800 rounded-xl border border-gray-700 shadow-lg p-8">
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="bg-red-500/10 border border-red-500/20 text-red-500 px-4 py-3 rounded-lg">
+              <div className="bg-red-500 bg-opacity-10 border border-red-500 border-opacity-20 text-red-500 px-4 py-3 rounded-lg text-sm">
                 {error}
               </div>
             )}
@@ -86,7 +86,7 @@ const Register = () => {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="input-field"
+                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Enter your full name"
               />
             </div>
@@ -101,7 +101,7 @@ const Register = () => {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="input-field"
+                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Enter your email"
               />
             </div>
@@ -116,7 +116,7 @@ const Register = () => {
                   name="department"
                   value={formData.department}
                   onChange={handleChange}
-                  className="input-field"
+                  className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Department"
                 />
               </div>
@@ -130,7 +130,7 @@ const Register = () => {
                   name="position"
                   value={formData.position}
                   onChange={handleChange}
-                  className="input-field"
+                  className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Position"
                 />
               </div>
@@ -144,7 +144,7 @@ const Register = () => {
                 name="role"
                 value={formData.role}
                 onChange={handleChange}
-                className="input-field"
+                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="employee">Employee</option>
                 <option value="admin">Admin</option>
@@ -161,7 +161,7 @@ const Register = () => {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="input-field"
+                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Enter your password"
               />
             </div>
@@ -176,7 +176,7 @@ const Register = () => {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 required
-                className="input-field"
+                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Confirm your password"
               />
             </div>
@@ -184,7 +184,7 @@ const Register = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full btn-primary flex items-center justify-center space-x-2"
+              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
             >
               <UserPlus size={20} />
               <span>{loading ? 'Creating Account...' : 'Create Account'}</span>

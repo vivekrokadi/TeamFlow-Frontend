@@ -22,18 +22,38 @@ const EmployeeDashboard = () => {
   const fetchTasks = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('https://teamflow-1yai.onrender.com/api/tasks', {
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
+      const baseURL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+        ? 'http://localhost:5000' 
+        : 'https://teamflow-1yai.onrender.com';
+
+      const response = await fetch(`${baseURL}/api/tasks`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
       
-      if (!response.ok) throw new Error('Failed to fetch tasks');
+      if (response.status === 401) {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+        return;
+      }
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch tasks: ${response.status}`);
+      }
       
       const data = await response.json();
       setTasks(data.data);
     } catch (error) {
-      console.error('Error fetching tasks:', error);
+      console.error('Error fetching tasks:', error.message);
+      if (error.message.includes('Unauthorized') || error.message.includes('No authentication')) {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+      }
     } finally {
       setLoading(false);
     }
@@ -59,7 +79,11 @@ const EmployeeDashboard = () => {
   const handleStatusUpdate = async (taskId, newStatus) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`https://teamflow-1yai.onrender.com/api/tasks/${taskId}`, {
+      const baseURL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+        ? 'http://localhost:5000' 
+        : 'https://teamflow-1yai.onrender.com';
+
+      const response = await fetch(`${baseURL}/api/tasks/${taskId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -68,7 +92,15 @@ const EmployeeDashboard = () => {
         body: JSON.stringify({ status: newStatus }),
       });
       
-      if (!response.ok) throw new Error('Failed to update task');
+      if (response.status === 401) {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+        return;
+      }
+      
+      if (!response.ok) {
+        throw new Error('Failed to update task');
+      }
       
       fetchTasks();
     } catch (error) {

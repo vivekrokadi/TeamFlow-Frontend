@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { LogIn, Users } from 'lucide-react';
 
 const Login = () => {
@@ -13,6 +13,9 @@ const Login = () => {
   
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || '/dashboard';
 
   const handleChange = (e) => {
     setFormData({
@@ -28,16 +31,16 @@ const Login = () => {
 
     try {
       await login(formData.email, formData.password);
-      navigate('/dashboard');
+      navigate(from, { replace: true });
     } catch (error) {
-      setError(error.response?.data?.message || 'Login failed');
+      setError(error.message || 'Login failed. Please check your credentials.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-dark-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         {/* Header */}
         <div className="text-center mb-8">
@@ -51,10 +54,10 @@ const Login = () => {
         </div>
 
         {/* Login Form */}
-        <div className="card p-8">
+        <div className="bg-gray-800 rounded-xl border border-gray-700 shadow-lg p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
-              <div className="bg-red-500/10 border border-red-500/20 text-red-500 px-4 py-3 rounded-lg">
+              <div className="bg-red-500 bg-opacity-10 border border-red-500 border-opacity-20 text-red-500 px-4 py-3 rounded-lg text-sm">
                 {error}
               </div>
             )}
@@ -69,7 +72,7 @@ const Login = () => {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="input-field"
+                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Enter your email"
               />
             </div>
@@ -84,7 +87,7 @@ const Login = () => {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="input-field"
+                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Enter your password"
               />
             </div>
@@ -92,7 +95,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full btn-primary flex items-center justify-center space-x-2"
+              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
             >
               <LogIn size={20} />
               <span>{loading ? 'Signing in...' : 'Sign In'}</span>

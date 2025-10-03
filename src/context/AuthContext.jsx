@@ -10,8 +10,20 @@ export const useAuth = () => {
   return context;
 };
 
+// Get base URL based on environment
+const getBaseURL = () => {
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return 'http://localhost:5000';
+  } else {
+    return 'https://teamflow-1yai.onrender.com';
+  }
+};
+
+const BASE_URL = getBaseURL();
+
 const apiRequest = async (url, options = {}) => {
   const token = localStorage.getItem('token');
+  
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -25,14 +37,30 @@ const apiRequest = async (url, options = {}) => {
     config.body = JSON.stringify(config.body);
   }
 
-  const response = await fetch(`https://teamflow-1yai.onrender.com${url}`, config);
-  const data = await response.json();
+  try {
+    const response = await fetch(`${BASE_URL}${url}`, config);
+    
+    // Handle unauthorized responses
+    if (response.status === 401) {
+      localStorage.removeItem('token');
+      throw new Error('Unauthorized - Please login again');
+    }
 
-  if (!response.ok) {
-    throw new Error(data.message || 'Request failed');
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || `Request failed with status ${response.status}`);
+    }
+
+    return data;
+  } catch (error) {
+    if (error.message.includes('Unauthorized')) {
+      // Clear token and redirect to login
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+    }
+    throw error;
   }
-
-  return data;
 };
 
 export const AuthProvider = ({ children }) => {
@@ -53,37 +81,50 @@ export const AuthProvider = ({ children }) => {
       const data = await apiRequest('/api/auth/me');
       setUser(data.data);
     } catch (error) {
-      localStorage.removeItem('token');
+      console.error('Error fetching user:', error.message);
+      // Don't clear token here as it might be a network error
+      if (error.message.includes('Unauthorized')) {
+        localStorage.removeItem('token');
+      }
     } finally {
       setLoading(false);
     }
   };
 
   const login = async (email, password) => {
-    const data = await apiRequest('/api/auth/login', {
-      method: 'POST',
-      body: { email, password },
-    });
-    
-    localStorage.setItem('token', data.token);
-    setUser(data.user);
-    return data;
+    try {
+      const data = await apiRequest('/api/auth/login', {
+        method: 'POST',
+        body: { email, password },
+      });
+      
+      localStorage.setItem('token', data.token);
+      setUser(data.user);
+      return data;
+    } catch (error) {
+      throw new Error(error.message || 'Login failed');
+    }
   };
 
   const register = async (userData) => {
-    const data = await apiRequest('/api/auth/register', {
-      method: 'POST',
-      body: userData,
-    });
-    
-    localStorage.setItem('token', data.token);
-    setUser(data.user);
-    return data;
+    try {
+      const data = await apiRequest('/api/auth/register', {
+        method: 'POST',
+        body: userData,
+      });
+      
+      localStorage.setItem('token', data.token);
+      setUser(data.user);
+      return data;
+    } catch (error) {
+      throw new Error(error.message || 'Registration failed');
+    }
   };
 
   const logout = () => {
     localStorage.removeItem('token');
     setUser(null);
+    window.location.href = '/login';
   };
 
   const value = {
