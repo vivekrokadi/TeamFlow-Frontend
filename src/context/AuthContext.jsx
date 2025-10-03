@@ -23,17 +23,17 @@ export const AuthProvider = ({ children }) => {
     
     if (savedUser && token) {
       try {
-        setUser(JSON.parse(savedUser));
-        // Verify token is still valid
+        const userData = JSON.parse(savedUser);
+        setUser(userData);
+        // Verify token is still valid in background
         verifyToken(token);
       } catch (error) {
         console.error('Error parsing saved user:', error);
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
+        clearAuthData();
       }
+    } else {
+      setLoading(false);
     }
-    
-    setLoading(false);
   }, []);
 
   const verifyToken = async (token) => {
@@ -44,15 +44,29 @@ export const AuthProvider = ({ children }) => {
         },
       });
 
-      if (!response.ok) {
-        throw new Error('Token invalid');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.data) {
+          // Update user data from server
+          localStorage.setItem('user', JSON.stringify(data.data));
+          setUser(data.data);
+        }
+      } else {
+        // Token is invalid, clear auth data
+        clearAuthData();
       }
     } catch (error) {
       console.error('Token verification failed:', error);
-      localStorage.removeItem('user');
-      localStorage.removeItem('token');
-      setUser(null);
+      // Don't clear auth data on network errors, keep using localStorage data
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const clearAuthData = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setUser(null);
   };
 
   const login = async (email, password) => {
@@ -106,9 +120,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setUser(null);
+    clearAuthData();
     window.location.href = '/login';
   };
 
