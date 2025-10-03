@@ -37,57 +37,51 @@ const apiRequest = async (url, options = {}) => {
     config.body = JSON.stringify(config.body);
   }
 
-  try {
-    const response = await fetch(`${BASE_URL}${url}`, config);
-    
-    // Handle unauthorized responses
-    if (response.status === 401) {
-      localStorage.removeItem('token');
-      throw new Error('Unauthorized - Please login again');
-    }
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || `Request failed with status ${response.status}`);
-    }
-
-    return data;
-  } catch (error) {
-    if (error.message.includes('Unauthorized')) {
-      // Clear token and redirect to login
-      localStorage.removeItem('token');
-      window.location.href = '/login';
-    }
-    throw error;
+  const response = await fetch(`${BASE_URL}${url}`, config);
+  
+  // Handle unauthorized responses
+  if (response.status === 401) {
+    localStorage.removeItem('token');
+    throw new Error('Unauthorized');
   }
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || `Request failed with status ${response.status}`);
+  }
+
+  return data;
 };
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      fetchUser();
-    } else {
-      setLoading(false);
-    }
+    initializeAuth();
   }, []);
 
-  const fetchUser = async () => {
+  const initializeAuth = async () => {
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      setLoading(false);
+      setInitialized(true);
+      return;
+    }
+
     try {
       const data = await apiRequest('/api/auth/me');
       setUser(data.data);
     } catch (error) {
-      console.error('Error fetching user:', error.message);
-      // Don't clear token here as it might be a network error
-      if (error.message.includes('Unauthorized')) {
-        localStorage.removeItem('token');
-      }
+      console.log('Token validation failed:', error.message);
+      localStorage.removeItem('token');
+      setUser(null);
     } finally {
       setLoading(false);
+      setInitialized(true);
     }
   };
 
@@ -132,7 +126,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
-    loading
+    loading: loading || !initialized
   };
 
   return (

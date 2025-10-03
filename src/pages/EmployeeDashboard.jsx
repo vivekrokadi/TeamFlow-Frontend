@@ -12,8 +12,10 @@ const EmployeeDashboard = () => {
   const [statusFilter, setStatusFilter] = useState('all');
 
   useEffect(() => {
-    fetchTasks();
-  }, []);
+    if (user) {
+      fetchTasks();
+    }
+  }, [user]);
 
   useEffect(() => {
     filterTasks();
@@ -23,7 +25,8 @@ const EmployeeDashboard = () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        throw new Error('No authentication token found');
+        console.error('No token found');
+        return;
       }
 
       const baseURL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
@@ -37,6 +40,7 @@ const EmployeeDashboard = () => {
       });
       
       if (response.status === 401) {
+        console.log('Token expired, redirecting to login');
         localStorage.removeItem('token');
         window.location.href = '/login';
         return;
@@ -50,10 +54,6 @@ const EmployeeDashboard = () => {
       setTasks(data.data);
     } catch (error) {
       console.error('Error fetching tasks:', error.message);
-      if (error.message.includes('Unauthorized') || error.message.includes('No authentication')) {
-        localStorage.removeItem('token');
-        window.location.href = '/login';
-      }
     } finally {
       setLoading(false);
     }
