@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import DebugAuth from './components/DebugAuth';
 
 // Pages
 import Login from './pages/Login';
@@ -13,6 +14,7 @@ import Layout from './components/Layout';
 function App() {
   return (
     <AuthProvider>
+      <DebugAuth/>
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />

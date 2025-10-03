@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Search, Filter, ClipboardList } from 'lucide-react';
 import TaskCard from '../components/TaskCard';
+import { apiRequest } from '../utils/api';
 
 const EmployeeDashboard = () => {
   const { user } = useAuth();
@@ -23,34 +24,7 @@ const EmployeeDashboard = () => {
 
   const fetchTasks = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        console.error('No token found');
-        return;
-      }
-
-      const baseURL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-        ? 'http://localhost:5000' 
-        : 'https://teamflow-1yai.onrender.com';
-
-      const response = await fetch(`${baseURL}/api/tasks`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      
-      if (response.status === 401) {
-        console.log('Token expired, redirecting to login');
-        localStorage.removeItem('token');
-        window.location.href = '/login';
-        return;
-      }
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch tasks: ${response.status}`);
-      }
-      
-      const data = await response.json();
+      const data = await apiRequest('/api/tasks');
       setTasks(data.data);
     } catch (error) {
       console.error('Error fetching tasks:', error.message);
@@ -78,30 +52,10 @@ const EmployeeDashboard = () => {
 
   const handleStatusUpdate = async (taskId, newStatus) => {
     try {
-      const token = localStorage.getItem('token');
-      const baseURL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-        ? 'http://localhost:5000' 
-        : 'https://teamflow-1yai.onrender.com';
-
-      const response = await fetch(`${baseURL}/api/tasks/${taskId}`, {
+      await apiRequest(`/api/tasks/${taskId}`, {
         method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ status: newStatus }),
+        body: { status: newStatus },
       });
-      
-      if (response.status === 401) {
-        localStorage.removeItem('token');
-        window.location.href = '/login';
-        return;
-      }
-      
-      if (!response.ok) {
-        throw new Error('Failed to update task');
-      }
-      
       fetchTasks();
     } catch (error) {
       console.error('Error updating task status:', error);

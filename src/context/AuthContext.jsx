@@ -10,54 +10,11 @@ export const useAuth = () => {
   return context;
 };
 
-// Get base URL based on environment
-const getBaseURL = () => {
-  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    return 'http://localhost:5000';
-  } else {
-    return 'https://teamflow-1yai.onrender.com';
-  }
-};
-
-const BASE_URL = getBaseURL();
-
-const apiRequest = async (url, options = {}) => {
-  const token = localStorage.getItem('token');
-  
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token && { 'Authorization': `Bearer ${token}` }),
-      ...options.headers,
-    },
-    ...options,
-  };
-
-  if (config.body && typeof config.body === 'object') {
-    config.body = JSON.stringify(config.body);
-  }
-
-  const response = await fetch(`${BASE_URL}${url}`, config);
-  
-  // Handle unauthorized responses
-  if (response.status === 401) {
-    localStorage.removeItem('token');
-    throw new Error('Unauthorized');
-  }
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message || `Request failed with status ${response.status}`);
-  }
-
-  return data;
-};
+const API_BASE_URL = 'https://teamflow-1yai.onrender.com';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
     initializeAuth();
@@ -65,33 +22,65 @@ export const AuthProvider = ({ children }) => {
 
   const initializeAuth = async () => {
     const token = localStorage.getItem('token');
+    console.log('🔐 Auth Initialization - Token exists:', !!token);
     
     if (!token) {
+      console.log('🔐 No token found, skipping auth check');
       setLoading(false);
-      setInitialized(true);
       return;
     }
 
     try {
-      const data = await apiRequest('/api/auth/me');
-      setUser(data.data);
+      console.log('🔐 Validating token...');
+      
+      // Test the token first with a simple request
+      const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log('🔐 Auth check response status:', response.status);
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('🔐 Token valid, user:', data.data);
+        setUser(data.data);
+      } else {
+        console.log('🔐 Token invalid, status:', response.status);
+        localStorage.removeItem('token');
+        setUser(null);
+      }
     } catch (error) {
-      console.log('Token validation failed:', error.message);
+      console.error('🔐 Auth check failed:', error);
       localStorage.removeItem('token');
       setUser(null);
     } finally {
       setLoading(false);
-      setInitialized(true);
+      console.log('🔐 Auth initialization complete');
     }
   };
 
   const login = async (email, password) => {
     try {
-      const data = await apiRequest('/api/auth/login', {
+      console.log('🔐 Attempting login...');
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
-        body: { email, password },
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
       });
-      
+
+      const data = await response.json();
+      console.log('🔐 Login response:', data);
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Login failed');
+      }
+
       localStorage.setItem('token', data.token);
       setUser(data.user);
       return data;
@@ -102,11 +91,20 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const data = await apiRequest('/api/auth/register', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: 'POST',
-        body: userData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
       });
-      
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Registration failed');
+      }
+
       localStorage.setItem('token', data.token);
       setUser(data.user);
       return data;
@@ -126,7 +124,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
-    loading: loading || !initialized
+    loading
   };
 
   return (
