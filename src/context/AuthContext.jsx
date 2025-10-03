@@ -16,56 +16,47 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Load user from localStorage on initial load
   useEffect(() => {
-    initializeAuth();
+    const savedUser = localStorage.getItem('user');
+    const token = localStorage.getItem('token');
+    
+    if (savedUser && token) {
+      try {
+        setUser(JSON.parse(savedUser));
+        // Verify token is still valid
+        verifyToken(token);
+      } catch (error) {
+        console.error('Error parsing saved user:', error);
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+      }
+    }
+    
+    setLoading(false);
   }, []);
 
-  const initializeAuth = async () => {
-    const token = localStorage.getItem('token');
-    console.log('🔐 Auth Initialization - Token exists:', !!token);
-    
-    if (!token) {
-      console.log('🔐 No token found, skipping auth check');
-      setLoading(false);
-      return;
-    }
-
+  const verifyToken = async (token) => {
     try {
-      console.log('🔐 Validating token...');
-      
-      // Test the token first with a simple request
       const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
-        method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
         },
       });
 
-      console.log('🔐 Auth check response status:', response.status);
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log('🔐 Token valid, user:', data.data);
-        setUser(data.data);
-      } else {
-        console.log('🔐 Token invalid, status:', response.status);
-        localStorage.removeItem('token');
-        setUser(null);
+      if (!response.ok) {
+        throw new Error('Token invalid');
       }
     } catch (error) {
-      console.error('🔐 Auth check failed:', error);
+      console.error('Token verification failed:', error);
+      localStorage.removeItem('user');
       localStorage.removeItem('token');
       setUser(null);
-    } finally {
-      setLoading(false);
-      console.log('🔐 Auth initialization complete');
     }
   };
 
   const login = async (email, password) => {
     try {
-      console.log('🔐 Attempting login...');
       const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
@@ -75,13 +66,13 @@ export const AuthProvider = ({ children }) => {
       });
 
       const data = await response.json();
-      console.log('🔐 Login response:', data);
 
       if (!response.ok) {
         throw new Error(data.message || 'Login failed');
       }
 
       localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
       setUser(data.user);
       return data;
     } catch (error) {
@@ -106,6 +97,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
       setUser(data.user);
       return data;
     } catch (error) {
@@ -115,6 +107,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setUser(null);
     window.location.href = '/login';
   };
