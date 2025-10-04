@@ -1,6 +1,5 @@
 # TeamFlow Frontend - Employee Task Management System 🚀
 
-![TeamFlow Banner](https://via.placeholder.com/1200x400/1F2937/FFFFFF?text=TeamFlow+Frontend+-+Modern+React+Dashboard)
 
 A modern, responsive **React.js frontend** for **TeamFlow** – a comprehensive employee task management system. Features a beautiful dark-themed UI, role-based dashboards, and seamless user experience.
 
@@ -42,7 +41,7 @@ Clean interface for employees to **view and update their tasks**.
 - ✅ Automatic **token refresh**  
 
 ### 👨‍💼 Admin Dashboard
-- ✅ View all employees and their profiles  
+- ✅ View all employees  
 - ✅ Create, assign, and manage tasks  
 - ✅ Advanced **task filtering and search**  
 - ✅ Real-time **task status monitoring**  
@@ -50,8 +49,7 @@ Clean interface for employees to **view and update their tasks**.
 
 ### 👩‍💻 Employee Dashboard
 - ✅ View assigned tasks with due dates  
-- ✅ Update task status (**Pending → In Progress → Completed**)  
-- ✅ Personal profile management  
+- ✅ Update task status (**Pending → In Progress → Completed**)   
 - ✅ Task filtering and search functionality  
 - ✅ Priority-based task organization  
 
