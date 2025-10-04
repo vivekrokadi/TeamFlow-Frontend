@@ -70,3 +70,20 @@ Clean interface for employees to **view and update their tasks**.
 
 ---
 
+## 🚀 Future Enhancements
+
+### Planned Features
+- 🔔 **Real-time Notifications** - Display task updates instantly on the UI  
+- 📊 **Analytics Dashboard** - Visual charts for team performance  
+- 🔗 **Third-party Integrations** - Calendar sync, Slack notifications  
+- 📁 **File Attachments UI** - Upload and view task-related documents  
+- 👥 **Team Collaboration UI** - Comments and discussions on tasks  
+- 📅 **Calendar View** - Drag-and-drop task scheduling  
+- 🎯 **Advanced Reporting UI** - Custom report views and exports  
+
+### Technical Improvements
+- ⚡ **Performance Optimization** - Code-splitting, lazy loading, caching  
+- 🔒 **Enhanced Security** - Improved token handling and session management  
+- 🧪 **Advanced Testing** - Unit and integration tests for components  
+
+
