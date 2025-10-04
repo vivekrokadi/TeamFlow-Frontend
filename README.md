@@ -1,6 +1,5 @@
 # TeamFlow Frontend - Employee Task Management System 🚀
 
-
 A modern, responsive **React.js frontend** for **TeamFlow** – a comprehensive employee task management system. Features a beautiful dark-themed UI, role-based dashboards, and seamless user experience.
 
 ---
@@ -13,15 +12,15 @@ A modern, responsive **React.js frontend** for **TeamFlow** – a comprehensive 
 ## 📸 Demo
 
 ### 🔐 Login & Authentication
-![Login Demo](./public//login.png)  
+![Login Demo](./public/login.png)  
 Secure **JWT-based authentication** with role-based access.
 
 ### 🛠 Admin Dashboard
-![Admin Dashboard](./public//admin.png)  
+![Admin Dashboard](./public/admin.png)  
 Comprehensive admin panel for **managing employees and tasks**.
 
 ### 👩‍💻 Employee Dashboard
-![Employee Dashboard](./public//emp.png)  
+![Employee Dashboard](./public/emp.png)  
 Clean interface for employees to **view and update their tasks**.
 
 ---
@@ -43,13 +42,12 @@ Clean interface for employees to **view and update their tasks**.
 ### 👨‍💼 Admin Dashboard
 - ✅ View all employees  
 - ✅ Create, assign, and manage tasks  
-- ✅ Advanced **task filtering and search**  
-- ✅ Real-time **task status monitoring**  
+- ✅ Advanced **task filtering and search**   
 - ✅ Employee management capabilities  
 
 ### 👩‍💻 Employee Dashboard
 - ✅ View assigned tasks with due dates  
-- ✅ Update task status (**Pending → In Progress → Completed**)   
+- ✅ Update task status (**Pending → In Progress → Completed**)  
 - ✅ Task filtering and search functionality  
 - ✅ Priority-based task organization  
 
@@ -58,16 +56,17 @@ Clean interface for employees to **view and update their tasks**.
 ## 🛠 Tech Stack
 
 ### Frontend  
-![React](https://img.shields.io/badge/React-18.2.0-61DAFB?logo=react&logoColor=white)  
-![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.3.0-06B6D4?logo=tailwindcss&logoColor=white)  
-![React Router](https://img.shields.io/badge/React_Router-6.15.0-CA4245?logo=reactrouter&logoColor=white)  
-![Vite](https://img.shields.io/badge/Vite-4.4.5-646CFF?logo=vite&logoColor=white)  
+![React](https://img.shields.io/badge/React-JavaScript_UI_Library-61DAFB?logo=react&logoColor=white)  
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-CSS_Framework-06B6D4?logo=tailwindcss&logoColor=white)  
+![React Router](https://img.shields.io/badge/React_Router-Routing_Library-CA4245?logo=reactrouter&logoColor=white)  
+![Vite](https://img.shields.io/badge/Vite-Build_Tool-646CFF?logo=vite&logoColor=white)  
 
 ### State Management & API  
 ![Context API](https://img.shields.io/badge/Context_API-State_Management-61DAFB)  
 ![Fetch API](https://img.shields.io/badge/Fetch_API-HTTP_Requests-FF6B6B)  
 
 ### Deployment  
-![Vercel](https://img.shields.io/badge/Vercel-Deployment-000000?logo=vercel&logoColor=white)  
+![Vercel](https://img.shields.io/badge/Vercel-Hosting_Platform-000000?logo=vercel&logoColor=white)  
 
 ---
+
