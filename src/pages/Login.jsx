@@ -42,18 +42,18 @@ const Login = () => {
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
-        {/* Header */}
+        
         <div className="text-center mb-8">
           <div className="flex items-center justify-center space-x-3 mb-4">
             <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-              <Users className="text-white" size={24} />
+              <Users className="text-white" size={20} />
             </div>
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">TeamFlow</h1>
           <p className="text-gray-400">Sign in to your account</p>
         </div>
 
-        {/* Login Form */}
+        
         <div className="bg-gray-800 rounded-xl border border-gray-700 shadow-lg p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (

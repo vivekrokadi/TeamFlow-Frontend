@@ -132,7 +132,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-white">Admin Dashboard</h1>
@@ -147,7 +147,7 @@ const AdminDashboard = () => {
         </button>
       </div>
 
-      {/* Stats Grid */}
+    
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
         <div className="bg-gray-800 rounded-xl border border-gray-700 shadow-lg p-4 sm:p-6">
           <div className="flex items-center justify-between">
@@ -200,7 +200,7 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Filters */}
+      
       <div className="bg-gray-800 rounded-xl border border-gray-700 shadow-lg p-4 sm:p-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-3 sm:gap-4">
           <div className="md:col-span-2 relative">
@@ -243,7 +243,7 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Tasks Grid */}
+      
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
         {filteredTasks.map((task) => (
           <div key={task._id} className="relative group">
@@ -278,7 +278,7 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {/* Task Form Modal */}
+      
       {showTaskForm && (
         <TaskForm
           employees={employees}

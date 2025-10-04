@@ -1,34 +1,36 @@
-import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  Users, 
-  LogOut,
-  User,
-  Menu,
-  X
-} from 'lucide-react';
-import Sidebar from './Sidebar';
+import React, { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate, useLocation } from "react-router-dom";
+import { LayoutDashboard, Users, LogOut, User, Menu, X } from "lucide-react";
+import Sidebar from "./Sidebar";
 
 const Layout = ({ children }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    const handleLogout = () => {
+      navigate("/login", { replace: true });
+    };
+
+    window.addEventListener("authLogout", handleLogout);
+
+    return () => {
+      window.removeEventListener("authLogout", handleLogout);
+    };
+  }, [navigate]);
 
   const handleLogout = () => {
     logout();
-    // No need to navigate here - logout function in AuthContext will handle it
   };
 
   return (
     <div className="min-h-screen bg-gray-900 flex">
-      {/* Sidebar Component */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      
-      {/* Main Content Area */}
+
       <div className="flex-1 flex flex-col lg:ml-0">
-        {/* Mobile header */}
         <header className="lg:hidden bg-gray-800 border-b border-gray-700 px-4 py-3 sticky top-0 z-30">
           <div className="flex items-center justify-between">
             <button
@@ -37,21 +39,19 @@ const Layout = ({ children }) => {
             >
               {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
-            
+
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg"></div>
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center py-2">
+                <Users className="text-white" size={22} />
+              </div>
               <span className="text-lg font-bold text-white">TeamFlow</span>
             </div>
-            
-            {/* Spacer to balance the layout */}
+
             <div className="w-10"></div>
           </div>
         </header>
 
-        {/* Main content */}
-        <main className="flex-1 p-4 lg:p-8 overflow-auto">
-          {children}
-        </main>
+        <main className="flex-1 p-4 lg:p-8 overflow-auto">{children}</main>
       </div>
     </div>
   );

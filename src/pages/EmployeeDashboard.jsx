@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Search, Filter, ClipboardList } from 'lucide-react';
 import TaskCard from '../components/TaskCard';
-import { apiRequest } from '../utils/api';
+import { useApi } from '../hooks/useApi';
 
 const EmployeeDashboard = () => {
   const { user } = useAuth();
+  const { apiRequest } = useApi();
   const [tasks, setTasks] = useState([]);
   const [filteredTasks, setFilteredTasks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -83,7 +84,7 @@ const EmployeeDashboard = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-white">Dashboard</h1>
@@ -91,7 +92,7 @@ const EmployeeDashboard = () => {
         </div>
       </div>
 
-      {/* Stats Grid */}
+      
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
         <div className="bg-gray-800 rounded-xl border border-gray-700 shadow-lg p-4 sm:p-6">
           <div className="flex items-center justify-between">
@@ -164,7 +165,7 @@ const EmployeeDashboard = () => {
         </div>
       </div>
 
-      {/* Tasks Grid */}
+      
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
         {filteredTasks.map((task) => (
           <TaskCard
