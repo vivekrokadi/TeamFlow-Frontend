@@ -6,7 +6,7 @@ A modern, responsive **React.js frontend** for **TeamFlow** – a comprehensive 
 ---
 
 ## 🌐 Live Demo
-🔗 [Live Application](https://teamflow-vr.vercel.app/)
+🔗 [Live Application](https://team-flow-vr.vercel.app/)
 
 ---
 
