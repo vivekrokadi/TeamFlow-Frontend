@@ -68,7 +68,7 @@ const Login = () => {
         <div className="bg-gray-800 rounded-xl border border-gray-700 shadow-lg p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
-              <div className="bg-red-500 bg-opacity-10 border border-red-500 border-opacity-20 text-red-500 px-4 py-3 rounded-lg text-sm">
+              <div className="bg-red-500/10 bg-opacity-10 border border-red-500/20 border-opacity-20 text-red-500 px-4 py-3 rounded-lg text-sm">
                 {error}
               </div>
             )}
@@ -125,10 +125,10 @@ const Login = () => {
             </div>
 
             <div className="">
+              <p className="text-xs text-center py-1">Demo Accounts</p>
               {demoAccounts.map((account, index) => (
                 <div key={index} className="">
                   <div className="flex items-center justify-center gap-1 mb-2">
-                    <p className="text-xs">Demo Acc</p>
                     <span
                       className={`px-2 py-1 rounded text-xs font-medium ${
                         account.role === "Admin"
